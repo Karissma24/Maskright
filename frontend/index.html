@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Secure PII Form</title>
+  <style>
+    body { font-family: Arial; padding: 2em; background: #f8fafc; }
+    form { max-width: 400px; margin: auto; background: white; padding: 2em; border-radius: 1em; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    input, button { width: 100%; padding: 0.7em; margin: 0.5em 0; border-radius: 0.4em; border: 1px solid #ccc; }
+    button { background: #2563eb; color: white; font-weight: bold; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Secure PII Form</h2>
+  <form id="piiForm">
+    <input type="text" id="name" placeholder="Full Name" required />
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="tel" id="phone" placeholder="Phone" required />
+    <button type="submit">Submit</button>
+  </form>
+
+  <p id="result"></p>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
