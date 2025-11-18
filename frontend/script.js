@@ -1,4 +1,4 @@
-const API_URL = "https://<your-api-id>.execute-api.us-east-1.amazonaws.com/prod/ingest";
+const API_URL = "https://dm1sj67sl000.cloudfront.net/ingest";
 const HMAC_SECRET = "test-secret"; // For demo; use env var in production
 
 document.getElementById("piiForm").addEventListener("submit", async (e) => {
