@@ -3,11 +3,24 @@ A secure cloud app that collects personal data, encrypts and masks it in AWS, an
 
 
 # Streamlit Dashboard (Shreya)
-- Reads masked records via `GET /query` with HMAC headers.
-- Shows table + simple metrics. No raw PII is fetched or stored.
 
-## Local run
-pip install -r requirements.txt
-export API_BASE_URL=https://<api-gw-domain>
-export HMAC_SECRET=<dev-secret>
-streamlit run app.py
+This dashboard:
+- Calls the `/query` API endpoint through CloudFront.
+- Sends `X-Timestamp` and `X-Signature` (HMAC-SHA256) headers.
+- Shows only **masked** PII records (name, email, phone) plus `created_at`.
+- Displays simple metrics (total masked records, rows shown).
+
+## Tech Stack
+
+- Streamlit
+- Python `requests`
+- Secure API via CloudFront + API Gateway + Lambda
+- Data from DynamoDB (masked table only)
+
+## Configuration
+
+The app expects these secrets:
+
+```toml
+API_BASE_URL = "https://dm1sj67sl000.cloudfront.net"
+HMAC_SECRET  = "<team HMAC secret>"
