@@ -24,9 +24,13 @@ token_table = dynamodb.Table(PII_TOKEN_TABLE)
 # ---------- Helper Functions ----------
 
 def verify_hmac(headers, body):
-    """Verify timestamp freshness and HMAC signature."""
-    timestamp = headers.get("X-Timestamp")
-    signature = headers.get("X-Signature")
+    """Verify timestamp freshness and HMAC signature.
+
+    headers: dict with LOWER-CASED header names.
+    """
+    # Expect lowercased keys from API Gateway
+    timestamp = headers.get("x-timestamp")
+    signature = headers.get("x-signature")
 
     if not timestamp or not signature:
         raise ValueError("Missing HMAC headers")
@@ -84,7 +88,10 @@ def encrypt_pii(data):
 
 def lambda_handler(event, context):
     try:
-        headers = {k: v for k, v in event.get("headers", {}).items()}
+        # Normalize header keys to lower case
+        raw_headers = event.get("headers", {}) or {}
+        headers = {k.lower(): v for k, v in raw_headers.items()}
+
         body = event.get("body", "")
 
         # --- HMAC verification ---
@@ -95,7 +102,9 @@ def lambda_handler(event, context):
         validate_schema(data)
 
         # --- Mask and encrypt ---
-        name_masked, email_masked, phone_masked = mask_pii(data["name"], data["email"], data["phone"])
+        name_masked, email_masked, phone_masked = mask_pii(
+            data["name"], data["email"], data["phone"]
+        )
         encrypted_fields = encrypt_pii(data)
 
         # --- Generate record ID and timestamp ---
@@ -123,7 +132,10 @@ def lambda_handler(event, context):
 
         print(f"Stored masked+encrypted PII record {record_id} at {now_iso}")
 
-        return {"statusCode": 201, "body": json.dumps({"id": record_id, "status": "stored"})}
+        return {
+            "statusCode": 201,
+            "body": json.dumps({"id": record_id, "status": "stored"})
+        }
 
     except ValueError as e:
         print(f"Validation/HMAC error: {e}")
@@ -136,4 +148,3 @@ def lambda_handler(event, context):
     except Exception as e:
         print(f"Unexpected error: {e}")
         return {"statusCode": 400, "body": json.dumps({"error": str(e)})}
-
