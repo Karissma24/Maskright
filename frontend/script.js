@@ -1,5 +1,5 @@
 const API_URL = "https://dm1sj67sl000.cloudfront.net/ingest";
-const HMAC_SECRET = "test-secret"; // For demo; use env var in production
+const HMAC_SECRET = "1ff99f40e6e247fc94fde8f6f62a390a66dbdc586a51c9ee2f5e365569a2f77d"; // For demo; use env var in production
 
 document.getElementById("piiForm").addEventListener("submit", async (e) => {
   e.preventDefault();
